@@ -1,4 +1,4 @@
 rifts
 =====
-
-rss backend fetcher. Read It From The Source
+Read It From The Source<br>
+rss backend fetcher. 
