@@ -1,6 +1,18 @@
 usage(){
-	echo "Usage: NYI"
+	echo "RIFTS : Read It From The Source"
+	echo "A backend shell script that checks and stores new RSS links"
+	echo ""
+	echo "Usage: ${0##*/} [ -h ] [ -g subscriptions.xml ] [ -c ]"
+	echo ""
+	echo "Options:"
+	echo "	-h : Display this help and exit"
+	echo " 	-g : Index a google reader subscriptions.xml file"
+	echo "	-c : Check for rss updates of all links which should be stored (line by line) in the file 'feeds.db'"
+	echo ""
+	echo ""
+
 }
+
 
 googleindex(){
 	cat $1 | xmlstarlet sel -T -t -m opml/body/outline -v @xmlUrl -o "###" -o "offline" -o "###" -o "offline" -n >> $db
