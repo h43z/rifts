@@ -4,8 +4,6 @@ debug(){
 	[ "$_DEBUG" == "on" ] && "$@" || :
 }
 
-
-
 download(){
 	debug echo "Downloading: $1"
 	res=$(wget -t 1 -T 7 -U notgoogle -qO- --no-check-certificate $1)
