@@ -15,10 +15,13 @@ usage(){
 
 
 googleindex(){
-	cat $1 | xmlstarlet sel -T -t -m opml/body/outline -v @xmlUrl -o "###" -o "offline" -o "###" -o "offline" -n >> $db
+	cat $1 | xmlstarlet sel -T -t -m opml/body/outline -v @xmlUrl -o "###" -o "offline" -o "###" -o "offline" -n >> $_DB
 }
 
-db=feeds.db
+# GLOBAL VARS
+_DB=feeds.db
+_CORE=core.sh
+
 while getopts "hic" OPTION
 do
 	case $OPTION in
@@ -31,7 +34,7 @@ do
 		;;
 		c)
 			if [ -s feeds.db ]; then
-				awk -F'###' '{print $1}' feeds.db | xargs -P 20 -n 1 ./core.sh
+				awk -F'###' '{print $1}' $_DB | xargs -P 20 -n 1 $_CORE
 			else
 				echo "feeds.db is empty or does not exist"
 			fi
