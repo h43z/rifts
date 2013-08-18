@@ -6,14 +6,12 @@ debug(){
 
 download(){
 	debug echo "Downloading: $1"
-	res=$(wget -t 1 -T 7 -U notgoogle -qO- --no-check-certificate $1)
-	parse "$res"
+	res=$(wget -t 1 -T 7 -U notgoogle -qO- --no-cache --no-check-certificate $1)
+	parse "$res" # "" are needed!
 }
 
 parse(){
-
 	res=$(echo $1 | xmlstarlet fo -Q -R)
-
 	echo $res > tmp_$$
 	xmlstarlet val -w tmp_$$ > /dev/null
 	if [[ $? == 0 ]];then
@@ -39,20 +37,23 @@ parse(){
 		--else -v "atom:link/@href" -b -n |
 			while read line
 			do
-				if ! grep -q "$line" unread.txt ;then
-  					echo "$line" >> unread.txt
+				if ! grep -q "$line" $_UNSEEN && ! grep -q "$line" $_SEEN ;then
+  					echo "$line" >> $_UNSEEN
 				fi
 			done 
 	else
-		a=1
 		debug echo "XML BROKEN!"
 	fi
 	rm tmp_$$
 }
 
+# GLOBAL VARS
 _DEBUG="on"
+_UNSEEN="unseenlinks"
+_SEEN="seenlinks"
+
 # HERE TRAFFIC OPTIMIZATION NYI
-touch unread.txt
+touch $_UNSEEN $_SEEN
 download $1
 
 
