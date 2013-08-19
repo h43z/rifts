@@ -37,8 +37,8 @@ parse(){
 		--else -v "atom:link/@href" -b -n |
 			while read line
 			do
-				if ! grep -q "$line" $_UNSEEN && ! grep -q "$line" $_SEEN ;then
-  					echo "$line" >> $_UNSEEN
+				if ! grep -q "$line" $_LINKS ;then
+  					echo "$line" >> $_LINKS
 				fi
 			done 
 	else
@@ -49,11 +49,10 @@ parse(){
 
 # GLOBAL VARS
 _DEBUG="on"
-_UNSEEN="unseenlinks"
-_SEEN="seenlinks"
+_LINKS="links.db"
 
 # HERE TRAFFIC OPTIMIZATION NYI
-touch $_UNSEEN $_SEEN
+touch $_LINKS
 download $1
 
 

@@ -20,7 +20,7 @@ googleindex(){
 
 # GLOBAL VARS
 _DB=feeds.db
-_CORE=core.sh
+_CORE=./core.sh
 
 while getopts "hic" OPTION
 do
