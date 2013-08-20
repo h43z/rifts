@@ -37,6 +37,12 @@ parse(){
 		--else -v "atom:link/@href" -b -n |
 			while read line
 			do
+				if [[ "$line" == *feedproxy.google.com* ]];then
+					location=$(wget -t 1 -T 7 -U notgoogle --no-check-certificate -S --spider $_PARAMETERURL 2>&1 | grep "Location:" | tr "\n" "|")
+					location=$(echo $location | grep -Po '(?<=Location: ).*?(?=\|)' | awk '{print $1}' | tail -n1)
+					title=$(echo $line | awk -F'###' '{print $1}')
+					line="$title###$location"
+				fi
 				if ! grep -q "$line" $_LINKS ;then
   					echo "$line" >> $_LINKS
 				fi
@@ -50,9 +56,10 @@ parse(){
 # GLOBAL VARS
 _DEBUG="on"
 _LINKS="links.db"
+_PARAMETERURL=$1
 
 # HERE TRAFFIC OPTIMIZATION NYI
 touch $_LINKS
-download $1
+download $_PARAMETERURL
 
 
