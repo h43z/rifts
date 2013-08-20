@@ -3,29 +3,10 @@
 //GLOBAL VARS
 $registercode="2445";
 $registercodelength=strlen($registercode);
+$userdata="./userdata/";
 
 
 
-function getunreadlinks(){
-	
-}
-
-function getsubscriptions(){
-
-}
-
-function validation($cookie,$user,$pass){
-	if($cookie != null){
-		$flag = $cookie;
-	}else{
-		$flag = $user."_".$pass;
-	}
-	if(file_exists("./userdata/".$flag."_subscription")){
-		setcookie("rifts",$flag,time()+(3600*24*4));
-	}else{
-		die("login failed!");
-	}
-}	
 
 if(isset($_COOKIE["rifts"])){
 	validation($_COOKIE["rifts"]);
@@ -38,7 +19,7 @@ if(isset($_COOKIE["rifts"])){
 	if($code == $registercode){
 		$username=substr($_REQUEST["username"],4,100);
 		file_put_contents("./userdata/".$username."_".$password."_subscription", "");
-		file_put_contents("./userdata/".$username."_".$password."_unread", "");
+		file_put_contents("./userdata/".$username."_".$password."_read", "");
 		validation(null,$username,$password);
 	}else{
 	//tries to login
@@ -55,8 +36,41 @@ if(isset($_COOKIE["rifts"])){
 }
 
 
+function getfile($path){
+	foreach (file($path) as $line){
+		$line = explode("###", $line);
+		if(is_array($line)){
+			foreach($line as $part){
+				$data1[] = trim($part);
+			}
+			$data[] = $data1;
+			unset($data1);
+		}else{
+			$data[] = $line;
+		}
+	}
+	return $data;
+}
+
+function validation($cookie,$user,$pass){
+	if($cookie != null){
+		$flag = $cookie;
+	}else{
+		$flag = $user."_".$pass;
+	}
+	if(file_exists("./userdata/".$flag."_subscription")){
+		setcookie("rifts",$flag,time()+(3600*24*4));
+	}else{
+		die("login failed!");
+	}
+}	
+
+
 echo "Hello ".$_COOKIE["rifts"]."<br>";
-echo "hier artikel auflisten!";
+
+echo "<pre>";
+var_dump(getfile($userdata.$_COOKIE["rifts"]."_read"));
+echo "</pre>";
 
 
 
