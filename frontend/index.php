@@ -5,6 +5,15 @@ $registercode="2445";
 $registercodelength=strlen($registercode);
 
 
+
+function getunreadlinks(){
+	
+}
+
+function getsubscriptions(){
+
+}
+
 function validation($cookie,$user,$pass){
 	if($cookie != null){
 		$flag = $cookie;
@@ -14,15 +23,12 @@ function validation($cookie,$user,$pass){
 	if(file_exists("./userdata/".$flag."_subscription")){
 		setcookie("rifts",$flag,time()+(3600*24*4));
 	}else{
-		echo "login failed!";
-		die();
+		die("login failed!");
 	}
 }	
 
 if(isset($_COOKIE["rifts"])){
-	
 	validation($_COOKIE["rifts"]);
-	
 }elseif(isset($_REQUEST["username"]) && isset($_REQUEST["password"])){
 	
 	$code=substr($_REQUEST["username"],0,$registercodelength);
