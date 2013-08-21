@@ -16,8 +16,8 @@ if(isset($_COOKIE["rifts"])){
 	//tries to register
 	if($code == $registercode){
 		$username=substr($_REQUEST["username"],4,100);
-		file_put_contents($userdata.$username."_".$password."_subscription", "");
-		file_put_contents($userdata.$username."_".$password."_read", "");
+		file_put_contents($userdata.$username."_".$password."_subscriptions", "");
+		file_put_contents($userdata.$username."_".$password."_unread", "");
 		
 		validation(null,$username,$password);
 	}else{
@@ -59,7 +59,7 @@ function validation($cookie,$user,$pass){
 	}else{
 		$flag = $user."_".$pass;
 	}
-	if(file_exists($userdata.$flag."_subscription")){
+	if(file_exists($userdata.$flag."_subscriptions")){
 		setcookie("rifts",$flag,time()+(3600*24*4));
 		$_COOKIE["rifts"] = $flag;
 	}else{
@@ -67,15 +67,88 @@ function validation($cookie,$user,$pass){
 	}
 }	
 
-function writetofile($path,$str){
-	$content = file_get_contents($path);
-	file_put_contents($path,$str);
-	print_r(error_get_last());
+function getunread(){
+	global $userdata,$id;
+	$limit = 200;
+	$counter = 0;
+	$data = file($userdata.$id."_unread");
+	foreach ($data as $row) {
+		$counter++;
+		$item = explode("###", $row);
+		
+		if(empty($item[0]) || empty($item[1])){
+				continue;
+		}
+		$host = str_replace("www.","",parse_url(trim($item[1]), PHP_URL_HOST));
+
+		if((strlen($item[0]) + strlen($host)) > 100){
+			while((strlen($item[0]) + strlen($host)) > 100){
+				$item[0] = substr_replace($item[0] ,"",-1);
+			}
+			$item[0].="...";
+		}
+		echo "<div class='item'><a class='link' href='$item[1]' target='_blank'>$item[0]</a>&nbsp<span class='source'>(".$host.")</span><span class='close'>.</span></span><a class='close'></a></div>";
+		
+		if($counter >= $limit){
+				return;
+		}	
+	}
 }
 
-// go here after login or registration or valid cookie
+function prepend($path,$str) {
+		global $userdata;
+        $context = stream_context_create();
+        $fp = fopen($path, 'r', 1, $context);
+        $tmpname = $userdata.md5($str);
+        file_put_contents($tmpname, $str);
+        file_put_contents($tmpname, $fp, FILE_APPEND);
+        fclose($fp);
+        unlink($path);
+        rename($tmpname, $path);
+}
+
+function markasread($url){ // $url == "*all*" == all marked as read
+	global $unreadfile, $historyfile;
+	removeline($unreadfile,$url);
+	if($url !== "*all*"){
+		prepend($historyfile,$url);
+	}
+}
+
+function addsubscription($url){
+	global $subscriptionsfile;
+	$url = urldecode($url);
+	if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
+			die('Not a valid URL');
+	}else{
+			file_put_contents($subscriptionsfile,$url."\n", FILE_APPEND);
+	}
+}
+// go here after login/registration or valid cookie existence
+
+function removeline($path,$str){
+	global $historyfile;
+	$file = file($path);
+	foreach($file as $key => $line) {
+		if(strpos($line,$str) !== false || $str == "*all*"){
+				unset($file[$key]);
+				if($str == "*all*"){
+					prepend($historyfile,$str);
+				}
+		}
+	}
+	file_put_contents($path,$file);
+}
+
+
+function managefeeds(){
+	
+}
 
 $id = $_COOKIE["rifts"];
+$unreadfile = $userdata.$id."_unread";
+$historyfile = $userdata.$id."_history";
+$subscriptionsfile = $userdata.$id."_subscriptions";
 
 
 ?>
@@ -96,8 +169,8 @@ $id = $_COOKIE["rifts"];
 
 <html><meta charset='utf-8'/>
 	<title>RIFTS</title>
-	<div id='settings'><b><a href=''>RIFTS (<span id='unseencounter'><?echo " $id "?></span>)</a></b><br><a class=set>add</a><br><a class=set>manage</a><br><a class=set>all read</a><br><a class=set>history</a><br><a class=set>backend</a></div>
-	<div id=main></div>
+	<div id='settings'><b><a href=''>RIFTS (<span id='unseencounter'><? echo count(file($userdata.$id."_unread"));?></span>)</a></b><br><a class=set>add</a><br><a class=set>manage</a><br><a class=set>all read</a><br><a class=set>history</a><br><a class=set>backend</a></div>
+	<div id=main><?getunread();?></div>
 </html>
 
 
