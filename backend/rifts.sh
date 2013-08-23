@@ -1,13 +1,22 @@
 usage(){
-	echo "RIFTS : Read It From The Source"
-	echo "A backend shell script that checks and stores new RSS links"
+	echo "RIFTS : Read It From The Source ..."
+	echo ""
+	echo "is a backend shell scipt that manages RSS feeds for mulitple users"
+	echo "and puts new unread articles to specific places. Edit the configuration file"
+	echo "rifts.config with the needed scalability"
+	echo ""
+	echo "The layout for that file has to be the following"
+	echo "path/to/subscriptions###path/to/unread-articles"
+	echo ""
+	echo "Subscriptions file: One feed url per line"
 	echo ""
 	echo "Usage: ${0##*/} [ -h ] [ -g subscriptions.xml ] [ -c ]"
 	echo ""
+	echo " "
 	echo "Options:"
 	echo "	-h : Display this help and exit"
 	echo " 	-g : Index a google reader subscriptions.xml file"
-	echo "	-c : Check for rss updates of all links which should be stored (line by line) in the file 'feeds.db'"
+	echo "	-c : Check for rss updates of all files/paths from rifts.config"
 	echo ""
 	echo ""
 
@@ -21,6 +30,7 @@ googleindex(){
 # GLOBAL VARS
 _DB=feeds.db
 _CORE=./core.sh
+_CONFIG=./rifts.config
 
 while getopts "hic" OPTION
 do
@@ -33,10 +43,14 @@ do
 			googleindex $1
 		;;
 		c)
-			if [ -s feeds.db ]; then
-				awk -F'###' '{print $1}' $_DB | xargs -P 20 -n 1 $_CORE
+			if [ -s rifts.config ]; then
+				while read configline;do
+					feedfile=$(echo $configline | awk -F'###' '{print $1}')
+					destinationfile=$(echo $configline | awk -F'###' '{print $2}')
+					awk -v dest=$destinationfile -F'###' '{print $1" "dest}' $feedfile | xargs -P 20 -n 2 $_CORE
+				done < rifts.config
 			else
-				echo "feeds.db is empty or does not exist"
+				echo "rifts.config is empty or does not exist"
 			fi
 			exit 0
 		;;
