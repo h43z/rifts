@@ -149,6 +149,21 @@ function getfile($path){
 	}
 }
 
+function discuss($url){
+	$url = urldecode(strtok($_REQUEST["url"]),"?");
+	$redditapi = "http://www.reddit.com/api/info.json?url=".$url;
+	$data = @file_get_contents($redditapi);
+	if(empty($data)){
+			if(substr($url, -1) == "/"){
+					$url = substr_replace($url ,"",-1);
+			}elseif(substr($url, -1) != "/"){
+					$url += "/";
+			}
+			$redditapi = "http://www.reddit.com/api/info.json?url=".$url;
+			$data = @file_get_contents($redditapi);
+	}
+	echo $data;
+}
 
 // go here after login/registration or valid cookie existence
 $id = $_COOKIE["rifts"];
@@ -172,6 +187,9 @@ if(isset($_REQUEST["f"])){
 		break;
 		case "gethistory":
 			getfile($historyfile);
+		break;
+		case "discuss":
+			discuss($_REQUEST["url"]);
 		break;
 		default:
 		break;
