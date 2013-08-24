@@ -5,7 +5,7 @@ debug(){
 }
 
 download(){
-	debug echo "Downloading: $1"
+	debug echo "   +----[CORE] Downloading: $1"
 	res=$(wget -t 1 -T 7 -U notgoogle -qO- --no-cache --no-check-certificate $1)
 	parse "$res" # "" are needed!
 }
@@ -37,15 +37,15 @@ parse(){
 		--else -v "atom:link/@href" -b -n |
 			while read line
 			do
-				line=$_PARAMETERURL###$line
+				location=$(echo $line | awk -F'###' '{print $2}')
 				if [[ "$line" == *feedproxy.google.com* ]];then
 					location=$(wget -t 1 -T 7 -U notgoogle --no-check-certificate -S --spider $_PARAMETERURL 2>&1 | grep "Location:" | tr "\n" "|")
 					location=$(echo $location | grep -Po '(?<=Location: ).*?(?=\|)' | awk '{print $1}' | tail -n1)
 					title=$(echo $line | awk -F'###' '{print $1}')
-					line="$_PARAMETERURL###$title###$location"
+					line="$title###$location"
 				fi
-				if ! grep -q "$line" $_DESTINATIONFILE ;then
-  					echo "$line" >> $_DESTINATIONFILE
+				if ! grep -q "$location" $_NEWSFILE && ! grep -q "$location" $_HISTORYFILE ;then
+  					echo "$line" >> $_NEWSFILE
 				fi
 			done 
 	else
@@ -57,10 +57,10 @@ parse(){
 # GLOBAL VARS
 _DEBUG="on"
 _PARAMETERURL=$1
-_DESTINATIONFILE=$2
-
+_NEWSFILE=$2
+_HISTORYFILE=$3
 
 # HERE TRAFFIC OPTIMIZATION NYI
-touch $_DESTINATIONFILE
+touch $_NEWSFILE $_HISTORYFILE &>2 /dev/null
 download $_PARAMETERURL
 

@@ -6,7 +6,7 @@ usage(){
 	echo "rifts.config with the needed scalability"
 	echo ""
 	echo "The layout for that file has to be the following"
-	echo "path/to/subscriptions###path/to/unread-articles"
+	echo "path/to/subscriptions###path/to/put/news###path/to/already/read/article"
 	echo ""
 	echo "Subscriptions file: One feed url per line"
 	echo ""
@@ -28,7 +28,6 @@ googleindex(){
 }
 
 # GLOBAL VARS
-_DB=feeds.db
 _CORE=./core.sh
 _CONFIG=./rifts.config
 
@@ -46,8 +45,12 @@ do
 			if [ -s rifts.config ]; then
 				while read configline;do
 					feedfile=$(echo $configline | awk -F'###' '{print $1}')
-					destinationfile=$(echo $configline | awk -F'###' '{print $2}')
-					awk -v dest=$destinationfile -F'###' '{print $1" "dest}' $feedfile | xargs -P 20 -n 2 $_CORE
+					newsfile=$(echo $configline | awk -F'###' '{print $2}')
+					historyfile=$(echo $configline | awk -F'###' '{print $3}')
+					if [ -s $feedfile ]; then
+						echo "[RIFTS] Checking feeds from: $(basename $feedfile)"
+						awk -v newsfile=$newsfile -v historyfile=$historyfile -F'###' '{print $1" "newsfile" "historyfile}' $feedfile | xargs -P 20 -n 3 $_CORE
+					fi
 				done < rifts.config
 			else
 				echo "rifts.config is empty or does not exist"
