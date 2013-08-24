@@ -17,7 +17,9 @@ if(isset($_COOKIE["rifts"])){
 	if($code == $registercode){
 		$username=substr($_REQUEST["username"],4,100);
 		file_put_contents($userdata.$username."_".$password."_subscriptions", "");
-		file_put_contents($userdata.$username."_".$password."_unread", "");
+		file_put_contents($userdata.$username."_".$password."_news", "");
+		file_put_contents($userdata.$username."_".$password."_history", "");
+		chmod($userdata.$username."_".$password."_news",0777); // must be write/readable for rifts.sh
 		
 		validation(null,$username,$password);
 	}else{
@@ -67,11 +69,16 @@ function validation($cookie,$user,$pass){
 	}
 }	
 
-function getunread(){
-	global $userdata,$id;
+function getnews($file=null){
+	global $newsfile;
 	$limit = 200;
 	$counter = 0;
-	$data = file($userdata.$id."_unread");
+	
+	if($file == null){	
+		$data = file($newsfile);
+	}else{
+		$data = file($file);
+	}
 	foreach ($data as $row) {
 		$counter++;
 		$item = explode("###", trim($row));
@@ -108,17 +115,17 @@ function prepend($path,$str) {
 }
 
 function markasread($url){ // $url == "*all*" == all marked as read
-	global $unreadfile, $historyfile;
+	global $newsfile, $historyfile;
 	
 	if($url == "*all*"){
-		$file = file($unreadfile);
+		$file = file($newsfile);
 		foreach($file as $line) {
 			prepend($historyfile,$line);
 		}
-		file_put_contents($unreadfile, "");
+		file_put_contents($newsfile, "");
 	}else{
-		removeline($unreadfile,$url);
-		prepend($historyfile,$url);
+		$removed = removeline($newsfile,$url);
+		prepend($historyfile,"\n".$removed);
 	}
 }
 
@@ -136,10 +143,12 @@ function removeline($path,$str){
 	$file = file($path);
 	foreach($file as $key => $line) {
 		if(strpos($line,$str) !== false){
+			$removed = $file[$key];
 			unset($file[$key]);
 		}
 	}
 	file_put_contents($path,$file);
+	return $removed;	
 }
 
 function getfile($path){
@@ -167,9 +176,11 @@ function discuss($url){
 
 // go here after login/registration or valid cookie existence
 $id = $_COOKIE["rifts"];
-$unreadfile = $userdata.$id."_unread";
+$username = explode("_",$id)[0];
+$newsfile = $userdata.$id."_news";
 $historyfile = $userdata.$id."_history";
 $subscriptionsfile = $userdata.$id."_subscriptions";
+$newscount = count(file($newsfile));
 
 if(isset($_REQUEST["f"])){
 	switch($_REQUEST["f"]){
@@ -186,7 +197,7 @@ if(isset($_REQUEST["f"])){
 			markasread($_REQUEST["url"]);
 		break;
 		case "gethistory":
-			getfile($historyfile);
+			getnews($historyfile);
 		break;
 		case "discuss":
 			discuss($_REQUEST["url"]);
@@ -208,19 +219,19 @@ if(isset($_REQUEST["f"])){
         .discusslink:visited {color: #999;}
         .close {padding-left:10px;padding-right:10px;cursor:pointer;}
         .close:hover {color: blue;}
-        #settings{position:absolute;padding-top:15px;position:fixed;}
+        #options{position:absolute;padding-top:15px;position:fixed;}
         .item{}
 </style>
 
 <html><meta charset='utf-8'/>
 	<title>RIFTS</title>
-	<div id='settings'>
-	<b><a href=''>RIFTS (<span id='unseencounter'><? echo count(file($userdata.$id."_unread"));?></span>)</a></b><br>
+	<div id='options'>
+	<b><a href=''><?echo "$username@"?>RIFTS ~ (<span id='unseencounter'><? echo $newscount?></span>)</a></b><br>
 	<a class=set opt=1>add</a><br>
 	<a class=set opt=2>my feeds</a><br>
 	<a class=set opt=3>all read</a><br>
 	<a class=set opt=4>history</a><br></div>
-	<div id=main><?getunread();?></div>
+	<div id=main><?getnews();?></div>
 </html>
 
 <script>
