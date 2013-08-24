@@ -79,26 +79,31 @@ function getnews($file=null){
 	}else{
 		$data = file($file);
 	}
-	foreach ($data as $row) {
-		$counter++;
-		$item = explode("###", trim($row));
-		
-		if(empty($item[0]) || empty($item[1])){
-				continue;
-		}
-		$host = str_replace("www.","",parse_url(trim($item[1]), PHP_URL_HOST));
-
-		if((strlen($item[0]) + strlen($host)) > 100){
-			while((strlen($item[0]) + strlen($host)) > 100){
-				$item[0] = substr_replace($item[0] ,"",-1);
+	
+	if(!empty($data)){
+		foreach ($data as $row) {
+			$counter++;
+			$item = explode("###", trim($row));
+			
+			if(empty($item[0]) || empty($item[1])){
+					continue;
 			}
-			$item[0].="...";
+			$host = str_replace("www.","",parse_url(trim($item[1]), PHP_URL_HOST));
+
+			if((strlen($item[0]) + strlen($host)) > 100){
+				while((strlen($item[0]) + strlen($host)) > 100){
+					$item[0] = substr_replace($item[0] ,"",-1);
+				}
+				$item[0].="...";
+			}
+			echo "<div class='item'><a class='link' href='$item[1]' target='_blank'>$item[0]</a>&nbsp<span class='source'>(".$host.")</span><span class='close'>.</span></span><a class='close'></a></div>";
+			
+			if($counter >= $limit){
+					return;
+			}	
 		}
-		echo "<div class='item'><a class='link' href='$item[1]' target='_blank'>$item[0]</a>&nbsp<span class='source'>(".$host.")</span><span class='close'>.</span></span><a class='close'></a></div>";
-		
-		if($counter >= $limit){
-				return;
-		}	
+	}else{
+			echo "Dude, you read them all!";
 	}
 }
 
@@ -151,10 +156,11 @@ function removeline($path,$str){
 	return $removed;	
 }
 
-function getfile($path){
+function getsubscriptions($path){
 	$data = parsefile($path);
 	foreach($data as $set){
-		echo "$set[0]<br>";
+		echo "<div class='item'><a href='$set[0]' target='_blank'>$set[0]</a>&nbsp</span><span class='remove'>.</span></span><a class='remove'></a></div>";
+
 	}
 }
 
@@ -188,7 +194,10 @@ if(isset($_REQUEST["f"])){
 			addsubscription($_REQUEST["url"]);
 		break;
 		case "getsubscriptions":
-			getfile($subscriptionsfile);
+			getsubscriptions($subscriptionsfile);
+		break;
+		case "removesubscription":
+			removeline($subscriptionsfile,$_REQUEST["url"]);
 		break;
 		case "allread":
 			markasread("*all*");
@@ -217,8 +226,8 @@ if(isset($_REQUEST["f"])){
         #main {padding-top:15px;padding-bottom:70px;width: 1000px ;margin-left: 230px ;margin-right: auto ;}
         .discuss {color: #333;font-size:12px;padding-left:60px;}
         .discusslink:visited {color: #999;}
-        .close {padding-left:10px;padding-right:10px;cursor:pointer;}
-        .close:hover {color: blue;}
+        .close,.remove {padding-left:10px;padding-right:10px;cursor:pointer;}
+        .close:hover, .remove:hover {color: blue;}
         #options{position:absolute;padding-top:15px;position:fixed;}
         .item{}
 </style>
@@ -237,6 +246,7 @@ if(isset($_REQUEST["f"])){
 <script>
 linkclick=false;
 window.onload = function() {
+		// article links
         var links = document.getElementsByClassName("link");
         for(var i = 0; i < links.length; i++) {
                 links[i].onclick = function(e) {
@@ -249,6 +259,7 @@ window.onload = function() {
                 }
         }
 
+		// option links
         var links = document.getElementsByClassName("set");
         for(var i = 0; i < links.length; i++) {
                 links[i].onclick = function() {
@@ -266,6 +277,7 @@ window.onload = function() {
                                         break;
                                 case "2":
                                                 document.getElementById("main").innerHTML = ajax("?f=getsubscriptions");
+                                                addremoveevents();
                                         break;
                                 case "3":
                                                 var x=window.confirm("Are you sure?")
@@ -281,22 +293,23 @@ window.onload = function() {
                 }
         }
 
+		// reddit links
         var links = document.getElementsByClassName("reddit");
         for(var i = 0; i < links.length; i++) {
                 links[i].onclick = function() {this.parentNode.remove()}
         }
 
+		// article close links
         var links = document.getElementsByClassName("close");
         for(var i = 0; i < links.length; i++) {
                 links[i].onclick = function() {
 					console.log(this.parentNode.children[0].href);
-                        url=encodeURI(this.parentNode.children[0].href);
-                        this.parentNode.remove();
-                        updatecounter();
-                        ajax("?f=markasread&url="+url);
+					url=encodeURI(this.parentNode.children[0].href);
+					this.parentNode.remove();
+					updatecounter();
+					ajax("?f=markasread&url="+url);
                 };
         }
-
 }
 
 window.addEventListener('blur', function() {
@@ -351,6 +364,18 @@ function updatecounter(){
         document.getElementById("unseencounter").innerHTML =  --counter;
         document.title = "RIFTS ("+counter+")";
 }
+
+function addremoveevents(){
+	    var b = document.getElementsByClassName("remove");
+        for(var i = 0; i < b.length; i++) {
+                b[i].onclick = function() {
+						url=encodeURI(this.parentNode.children[0].href);
+						this.parentNode.remove();
+						ajax("?f=removesubscription&url="+url);
+				}
+	}
+}
+
 
 </script>
 
