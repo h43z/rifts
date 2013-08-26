@@ -235,11 +235,13 @@ if(isset($_REQUEST["f"])){
 <html><meta charset='utf-8'/>
 	<title>RIFTS</title>
 	<div id='options'>
-	<b><a href=''><?echo "$username@"?>RIFTS ~ (<span id='unseencounter'><? echo $newscount?></span>)</a></b><br>
-	<a class=set opt=1>add</a><br>
-	<a class=set opt=2>my feeds</a><br>
-	<a class=set opt=3>all read</a><br>
-	<a class=set opt=4>history</a><br></div>
+		<b><a href=''><?echo "$username@"?>RIFTS ~ (<span id='unseencounter'><? echo $newscount?></span>)</a></b><br>
+		<a class=set opt=1>add</a><br>
+		<a class=set opt=2>my feeds</a><br>
+		<a class=set opt=3>all read</a><br>
+		<a class=set opt=4>history</a><br>
+		<a class=set opt=5>logout</a>
+	</div>
 	<div id=main><?getnews();?></div>
 </html>
 
@@ -270,25 +272,29 @@ window.onload = function() {
                         this.style.color = "blue";
                         switch(this.getAttribute("opt")){
                                 case "1":
-                                                var url = window.prompt("RSS URL:","");
-                                                if (url != null && url != ""){
-                                                        ajax("?f=add&url="+encodeURI(url));
-                                                }
-                                        break;
+									var url = window.prompt("RSS URL:","");
+									if (url != null && url != ""){
+										ajax("?f=add&url="+encodeURI(url));
+									}
+								break;
                                 case "2":
-                                                document.getElementById("main").innerHTML = ajax("?f=getsubscriptions");
-                                                addremoveevents();
-                                        break;
+									document.getElementById("main").innerHTML = ajax("?f=getsubscriptions");
+									addremoveevents();
+                                break;
                                 case "3":
-                                                var x=window.confirm("Are you sure?")
-                                                if (x){
-                                                        ajax("?f=allread");
-                                                        window.location.reload(false); 
-                                                }
-                                        break;
+									var x=window.confirm("Are you sure?")
+									if (x){
+										ajax("?f=allread");
+										window.location.reload(false); 
+									}
+                                break;
                                 case "4":
-                                                document.getElementById("main").innerHTML = ajax("?f=gethistory");
-                                        break;
+									document.getElementById("main").innerHTML = ajax("?f=gethistory");
+                                break;
+                                case "5":
+									document.cookie = "rifts=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+									location.reload();
+                                break;
                         }
                 }
         }
