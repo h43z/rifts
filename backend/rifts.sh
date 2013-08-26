@@ -30,7 +30,7 @@ googleindex(){
 # GLOBAL VARS
 _CORE=./core.sh
 _CONFIG=./rifts.config
-
+_CACHE=rifts.cache
 while getopts "hic" OPTION
 do
 	case $OPTION in
@@ -52,6 +52,7 @@ do
 						awk -v newsfile=$newsfile -v historyfile=$historyfile -F'###' '{print $1" "newsfile" "historyfile}' $feedfile | xargs -P 20 -n 3 $_CORE
 					fi
 				done < rifts.config
+				rm $_CACHE
 			else
 				echo "rifts.config is empty or does not exist"
 			fi

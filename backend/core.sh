@@ -44,9 +44,8 @@ parse(){
 					title=$(echo $line | awk -F'###' '{print $1}')
 					line="$title###$location"
 				fi
-				if ! grep -q "$location" $_NEWSFILE && ! grep -q "$location" $_HISTORYFILE ;then
-  					echo "$line" >> $_NEWSFILE
-				fi
+					echo "$_PARAMETERURL###$line" >> $_CACHE
+					addnews $line $location
 			done 
 	else
 		debug echo "XML BROKEN!"
@@ -54,13 +53,32 @@ parse(){
 	rm tmp_$$
 }
 
+addnews(){
+	line=$1
+	location=$2
+	if ! grep -q "$location" $_NEWSFILE && ! grep -q "$location" $_HISTORYFILE ;then
+		echo "$line" >> $_NEWSFILE
+	fi
+}
+
 # GLOBAL VARS
 _DEBUG="on"
 _PARAMETERURL=$1
 _NEWSFILE=$2
 _HISTORYFILE=$3
+_CACHE=rifts.cache
 
+touch $_NEWSFILE $_HISTORYFILE $_CACHE 2> /dev/null
 # HERE TRAFFIC OPTIMIZATION NYI
-touch $_NEWSFILE $_HISTORYFILE 2> /dev/null
-download $_PARAMETERURL
+
+if grep -q "$_PARAMETERURL" $_CACHE ;then
+	debug echo "   +----[CORE] Found cached version of $_PARAMETERURL";
+	grep -q "$_PARAMETERURL" $_CACHE | awk -F'###' '{print $3}' | while read location;
+	do
+		addnews $line $location
+	done
+else
+	download $_PARAMETERURL
+fi
+
 
