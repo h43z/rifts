@@ -39,9 +39,9 @@ if(isset($_COOKIE["rifts"])){
 }
 
 function parsefile($path){
+	$data = null;
 	foreach (file($path) as $line){
 		$line = explode("###", $line);
-		$data = null;
 		if(is_array($line)){
 			foreach($line as $part){
 				$data1[] = trim($part);
