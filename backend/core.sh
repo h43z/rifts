@@ -58,7 +58,8 @@ addnews(){
 	
 	if ! grep -q "$line" $_NEWSFILE && ! grep -q "$line" $_HISTORYFILE ;then
 		debug echo "   +----[CORE] New Content: $line"
-		echo "$line" >> $_NEWSFILE
+		echo "$line"|cat - $_NEWSFILE > tmp_$$ && mv tmp_$$ $_NEWSFILE
+		# hier weiter machen auf server werden keine urls mehr in line angezeigt... noch mal user neu aufsetzen und testen
 	fi
 }
 
@@ -76,7 +77,7 @@ touch $_NEWSFILE $_HISTORYFILE $_CACHE 2> /dev/null
 
 if grep -q "$_PARAMETERURL" $_CACHE ;then
 	debug echo "   +----[CORE] Found cached version of $_PARAMETERURL";
-	grep "$_PARAMETERURL" $_CACHE | awk -F'###' '{print $2"###"$3}' | 
+	grep "$_PARAMETERURL" $_CACHE | awk -F'###' '{print $2}' | 
 		while read line
 		do
 			addnews "$line"
