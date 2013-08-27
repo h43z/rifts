@@ -317,15 +317,15 @@ window.onload = function() {
 }
 
 window.addEventListener('blur', function() {
-        if(linkclick){
-                linkclick=false;
-                if (discuss(url,activeitem)){
-                                return;
-                }
-                activeitem.parentNode.remove();
-                updatecounter();
-                ajax("?f=markasread&url="+url);
-        }
+	if(linkclick){
+		linkclick=false;
+		/*if (discuss(url,activeitem)){
+			return;
+		}*/
+		activeitem.parentNode.remove();
+		updatecounter();
+		ajax("?f=markasread&url="+url);
+	}
 
 });
 
