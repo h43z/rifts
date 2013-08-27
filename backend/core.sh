@@ -45,7 +45,7 @@ parse(){
 					line="$title###$location"
 				fi
 					echo "$_PARAMETERURL###$line" >> $_CACHE
-					addnews "$line" "$location"
+					addnews "$line"
 			done 
 	else
 		debug echo "XML BROKEN!"
@@ -54,29 +54,32 @@ parse(){
 }
 
 addnews(){
-	line=$1
-	location=$2
-	if ! grep -q "$location" $_NEWSFILE && ! grep -q "$location" $_HISTORYFILE ;then
+	line=$(echo $1 | sed 's#\[#\\[#g' | sed 's#\]#\\]#g')
+	
+	if ! grep -q "$line" $_NEWSFILE && ! grep -q "$line" $_HISTORYFILE ;then
+		debug echo "   +----[CORE] New Content: $line"
 		echo "$line" >> $_NEWSFILE
 	fi
 }
 
 # GLOBAL VARS
+_BACKEND=/var/www/rifts/backend
 _DEBUG="on"
 _PARAMETERURL=$1
 _NEWSFILE=$2
 _HISTORYFILE=$3
-_CACHE=rifts.cache
+_CACHE=$_BACKEND/rifts.cache
+
 
 touch $_NEWSFILE $_HISTORYFILE $_CACHE 2> /dev/null
 # HERE TRAFFIC OPTIMIZATION NYI
 
 if grep -q "$_PARAMETERURL" $_CACHE ;then
 	debug echo "   +----[CORE] Found cached version of $_PARAMETERURL";
-	grep -q "$_PARAMETERURL" $_CACHE | awk -F'###' '{print $3}' | 
-		while read location;
+	grep "$_PARAMETERURL" $_CACHE | awk -F'###' '{print $2"###"$3}' | 
+		while read line
 		do
-			addnews $line $location
+			addnews "$line"
 		done
 else
 	download $_PARAMETERURL
