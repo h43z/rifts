@@ -162,6 +162,7 @@ function getsubscriptions($path){
 		echo "<div class='item'><a href='$set[0]' target='_blank'>$set[0]</a>&nbsp</span><span class='remove'>.</span></span><a class='remove'></a></div>";
 
 	}
+	echo "<br><a>Import</a><input type=file>";
 }
 
 function discuss($url){
@@ -297,12 +298,6 @@ window.onload = function() {
                                 break;
                         }
                 }
-        }
-
-		// reddit links
-        var links = document.getElementsByClassName("reddit");
-        for(var i = 0; i < links.length; i++) {
-                links[i].onclick = function() {this.parentNode.remove()}
         }
 
 		// article close links
