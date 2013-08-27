@@ -159,9 +159,11 @@ function removeline($path,$str){
 
 function getsubscriptions($path){
 	$data = parsefile($path);
-	foreach($data as $set){
-		echo "<div class='item'><a href='$set[0]' target='_blank'>$set[0]</a>&nbsp</span><span class='remove'>.</span></span><a class='remove'></a></div>";
+	if($data !== null){
+		foreach($data as $set){
+			echo "<div class='item'><a href='$set[0]' target='_blank'>$set[0]</a>&nbsp</span><span class='remove'>.</span></span><a class='remove'></a></div>";
 
+		}
 	}
 	echo "<br><a>Import</a><input type=file>";
 }
