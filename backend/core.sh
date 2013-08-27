@@ -45,7 +45,7 @@ parse(){
 					line="$title###$location"
 				fi
 					echo "$_PARAMETERURL###$line" >> $_CACHE
-					addnews $line $location
+					addnews "$line" "$location"
 			done 
 	else
 		debug echo "XML BROKEN!"
