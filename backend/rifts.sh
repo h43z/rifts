@@ -43,6 +43,7 @@ do
 		;;
 		c)
 			if [ -s rifts.config ]; then
+				touch $_CACHE
 				while read configline;do
 					feedfile=$(echo $configline | awk -F'###' '{print $1}')
 					newsfile=$(echo $configline | awk -F'###' '{print $2}')
