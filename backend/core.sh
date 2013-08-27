@@ -73,10 +73,11 @@ touch $_NEWSFILE $_HISTORYFILE $_CACHE 2> /dev/null
 
 if grep -q "$_PARAMETERURL" $_CACHE ;then
 	debug echo "   +----[CORE] Found cached version of $_PARAMETERURL";
-	grep -q "$_PARAMETERURL" $_CACHE | awk -F'###' '{print $3}' | while read location;
-	do
-		addnews $line $location
-	done
+	grep -q "$_PARAMETERURL" $_CACHE | awk -F'###' '{print $3}' | 
+		while read location;
+		do
+			addnews $line $location
+		done
 else
 	download $_PARAMETERURL
 fi
