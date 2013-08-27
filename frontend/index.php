@@ -54,7 +54,7 @@ function parsefile($path){
 	return $data;
 }
 
-function validation($cookie,$user,$pass){
+function validation($cookie,$user=null,$pass=null){
 	global $userdata;
 	if($cookie != null){
 		$flag = $cookie;
