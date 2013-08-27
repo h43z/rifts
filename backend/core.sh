@@ -54,11 +54,13 @@ parse(){
 }
 
 addnews(){
-	line=$(echo $1 | sed 's#\[#\\[#g' | sed 's#\]#\\]#g')
+	line=$1
+	grepline=$(echo $1 | sed 's#\[#\\[#g' | sed 's#\]#\\]#g')
 	
-	if ! grep -q "$line" $_NEWSFILE && ! grep -q "$line" $_HISTORYFILE ;then
+	if ! grep -q "$grepline" $_NEWSFILE && ! grep -q "$grepline" $_HISTORYFILE ;then
 		debug echo "   +----[CORE] New Content: $line"
-		echo "$line"|cat - $_NEWSFILE > tmp_$$ && mv tmp_$$ $_NEWSFILE
+		
+		sed -i '1i $line' /tmp/newfile
 		# hier weiter machen auf server werden keine urls mehr in line angezeigt... noch mal user neu aufsetzen und testen
 	fi
 }
