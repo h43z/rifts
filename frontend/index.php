@@ -165,7 +165,6 @@ function getsubscriptions($path){
 
 		}
 	}
-	echo "<br><a>Import</a><input type=file>";
 }
 
 function discuss($url){
@@ -284,6 +283,8 @@ window.onload = function() {
                                 case "2":
 									document.getElementById("main").innerHTML = ajax("?f=getsubscriptions");
 									addremoveevents();
+									document.getElementById("main").innerHTML += "<br>Import (each feedurl line by line):<input type=file id=filereader>"; 
+									addfilereader();
                                 break;
                                 case "3":
 									var x=window.confirm("Are you sure?")
@@ -380,6 +381,30 @@ function addremoveevents(){
 	}
 }
 
+function addfilereader(){
+	document.getElementById('filereader').onchange = function(evt){
+	var f = evt.target.files[0]; 
 
+	if (f) {
+			var r = new FileReader();
+			r.onload = function(e) { 
+			console.log(e);
+			var contents = e.target.result;
+			var lines = contents.split("\n");
+			 for(var i = 0; i < lines.length; i++) {
+				if(lines[i] !== ""){
+					ajax("?f=add&url="+encodeURI(lines[i]));
+				}
+			 }
+			
+			  
+		  }
+		  r.readAsText(f);
+		} else { 
+		  alert("Failed to load file");
+		}
+	
+	};
+}
 </script>
 
