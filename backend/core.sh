@@ -38,6 +38,7 @@ parse(){
 			while read line
 			do
 				location=$(echo $line | awk -F'###' '{print $2}')
+				title=$(echo $line | awk -F'###' '{print $1}')
 				if [[ "$line" == *feedproxy.google.com* ]];then
 					location=$(wget -t 1 -T 7 -U notgoogle --no-check-certificate -S --spider $_PARAMETERURL 2>&1 | grep "Location:" | tr "\n" "|")
 					location=$(echo $location | grep -Po '(?<=Location: ).*?(?=\|)' | awk '{print $1}' | tail -n1)
@@ -55,13 +56,17 @@ parse(){
 
 addnews(){
 	line=$1
-	grepline=$(echo $1 | sed 's#\[#\\[#g' | sed 's#\]#\\]#g')
+	title=$(echo $line | awk -F'###' '{print $1}')
 	
-	if ! grep -q "$grepline" $_NEWSFILE && ! grep -q "$grepline" $_HISTORYFILE ;then
+	if ! grep -q -F "$title" $_NEWSFILE && ! grep -q -F "$title" $_HISTORYFILE ;then
 		debug echo "   +----[CORE] New Content: $line"
 		
-		sed -i '1i $line' /tmp/newfile
-		# hier weiter machen auf server werden keine urls mehr in line angezeigt... noch mal user neu aufsetzen und testen
+		if [[ -s $_NEWSFILE ]] ; then
+			sed -i "1i $line" $_NEWSFILE  #Block anscheined bei parallelisierung
+			#echo $line >> $_NEWSFILE
+		else
+			echo $line > $_NEWSFILE
+		fi
 	fi
 }
 
