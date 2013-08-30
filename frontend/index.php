@@ -185,7 +185,7 @@ function discuss($url){
 
 // go here after login/registration or valid cookie existence
 $id = $_COOKIE["rifts"];
-$username2 = explode("_",$id)[0];
+$username2 = explode("_",$id);
 $username = $username2[0];
 $newsfile = $userdata.$id."_news";
 $historyfile = $userdata.$id."_history";
