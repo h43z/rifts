@@ -47,7 +47,7 @@ do
 			googleindex $1
 		;;
 		c)
-			if [ -s rifts.config ]; then
+			if [ -s $_CONFIG ]; then
 				touch $_CACHE
 				while read configline;do
 					feedfile=$_USERDATA/$(echo $configline | awk -F'###' '{print $1}')
