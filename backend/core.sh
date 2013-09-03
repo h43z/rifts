@@ -39,8 +39,8 @@ parse(){
 			do
 				location=$(echo $line | awk -F'###' '{print $2}')
 				title=$(echo $line | awk -F'###' '{print $1}')
-				if [[ "$line" == *feedproxy.google.com* ]];then
-					location=$(wget -t 1 -T 7 -U notgoogle --no-check-certificate -S --spider $_PARAMETERURL 2>&1 | grep "Location:" | tr "\n" "|")
+				if [[ "$location" == *feedproxy.google.com* ]];then
+					location=$(wget -t 1 -T 7 -U notgoogle --no-check-certificate -S --spider $location 2>&1 | grep "Location:" | tr "\n" "|")
 					location=$(echo $location | grep -Po '(?<=Location: ).*?(?=\|)' | awk '{print $1}' | tail -n1)
 					title=$(echo $line | awk -F'###' '{print $1}')
 					line="$title###$location"
