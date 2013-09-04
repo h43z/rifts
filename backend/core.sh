@@ -85,7 +85,7 @@ touch $_NEWSFILE $_HISTORYFILE $_CACHE 2> /dev/null
 
 if grep -q "$_PARAMETERURL" $_CACHE ;then
 	debug echo "   +----[CORE] Found cached version of $_PARAMETERURL";
-	grep "$_PARAMETERURL" $_CACHE | awk -F'###' '{print $2}' | 
+	grep "$_PARAMETERURL" $_CACHE | awk -F'###' '{print $2"###"$3}' | 
 		while read line
 		do
 			addnews "$line"
