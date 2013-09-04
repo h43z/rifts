@@ -59,7 +59,7 @@ addnews(){
 	title=$(echo $line | awk -F'###' '{print $1}')
 	location=$(echo $line | awk -F'###' '{print $2}')
 	
-	if ( ! grep -q -F "$title" $_NEWSFILE && ! grep -q -F "$title" $_HISTORYFILE ) || ( ! grep -q -F "$location" $_NEWSFILE && ! grep -q -F "$location" $_HISTORYFILE ) ;then
+	if ( ! grep -q -F "$title" $_NEWSFILE && ! grep -q -F "$title" $_HISTORYFILE ) && ( ! grep -q -F "$location" $_NEWSFILE && ! grep -q -F "$location" $_HISTORYFILE ) ;then
 		debug echo "   +----[CORE] New Content: $line"
 		
 		if [[ -s $_NEWSFILE ]] ; then
