@@ -311,7 +311,6 @@ window.addEventListener('blur', function() {
 			return;
 		}
 
-		return;
 		activeitem.parentNode.remove();
 		updatecounter();
 		ajax("?f=markasread&url="+url);
@@ -400,15 +399,22 @@ function redditlookup(param){
 			return false;
 		}
 		
-		var redditapi  = 'http://www.reddit.com/api/info.json?url=';
-		var url = encodeURIComponent('http://www.stephenking.com/promo/utd_on_tv/letter.html');
-		var callback = '&jsonp=redditlookup';
-		var lookup = redditapi + url + callback
-		console.log(lookup);
-		var script = document.createElement('script');
-		script.src = lookup;
-		document.getElementsByTagName('head')[0].appendChild(script);
+		var urls = new Array;
+		//param = "http://www.stephenking.com/promo/utd_on_tv/letter.html?hasn";
+		urls.push(param);
+		urls.push(param.substr(0,param.indexOf('?')));
+		/* here more covering */
 		
+		var redditapi  = 'http://www.reddit.com/api/info.json?url=';
+		var callback = '&jsonp=redditlookup';
+		
+		for ( i = 0; i < urls.length; i++) {
+			var lookup = redditapi + urls[i] + callback;
+			var script = document.createElement('script');
+			script.src = lookup;
+			document.getElementsByTagName('head')[0].appendChild(script);
+			
+		}
 	}
 }
 
