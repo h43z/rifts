@@ -306,15 +306,12 @@ window.onload = function() {
 window.addEventListener('blur', function() {
 	if(linkclick){
 		linkclick=false;
-		/*if (discuss(url,activeitem)){
-			return;
-		}*/
 		
 		if (redditlookup(url)){
 			return;
 		}
-		
-		
+
+		return;
 		activeitem.parentNode.remove();
 		updatecounter();
 		ajax("?f=markasread&url="+url);
@@ -331,30 +328,6 @@ function ajax(url){
         return(serverResponse); 
 }
 
-function discuss(url,dest){
-        console.log("discuss");
-        var res = ajax("?f=discuss&url="+encodeURI(url)); 
-        if(res == "" || res == null){
-                return false;
-        } 
-        var obj = JSON.parse(res);
-        var i;
-        var d = dest.parentNode;
-        for ( i = 0; i < obj["data"]["children"].length; i++) {
-                if(dest.innerText != obj["data"]["children"][i]["data"]["title"]){
-                        var title = obj["data"]["children"][i]["data"]["title"];
-                }else{
-                        var title = "Discuss this @ /r/"+obj["data"]["children"][i]["data"]["subreddit"];
-                }
-                var span = document.createElement( 'span' );
-                span.innerHTML = "<br><span class='discuss'><a class='discusslink' href='http://reddit.com"+ obj["data"]["children"][i]["data"]["permalink"] +"' target='_blank'>"+title+"</a>&nbsp{"+obj["data"]["children"][i]["data"]["num_comments"]+"}&nbsp["+ obj["data"]["children"][i]["data"]["score"] +"]</span>";
-                d.appendChild(span); 
-        }
-        if(i == 0){
-                return false;
-        }
-        return true;
-}
 
 function updatecounter(){
         counter = parseInt(document.getElementById("unseencounter").innerHTML);
@@ -405,7 +378,7 @@ function redditlookup(param){
 		console.log("JSONP! :)");
 		titles = new Array();
 		permalinks = new Array();
-		comments = new Array();
+		numcomments = new Array();
 		scores = new Array();
 		for ( i = 0; i < param["data"]["children"].length; i++) {
 			titles[i] = param["data"]["children"][i]["data"]["title"];
@@ -423,6 +396,10 @@ function redditlookup(param){
 			return true;
 		}
 	}else{
+		if(param.indexOf("http://youtube.com") !==  -1){
+			return false;
+		}
+		
 		var redditapi  = 'http://www.reddit.com/api/info.json?url=';
 		var url = encodeURIComponent('http://www.stephenking.com/promo/utd_on_tv/letter.html');
 		var callback = '&jsonp=redditlookup';
