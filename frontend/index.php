@@ -168,7 +168,13 @@ function getsubscriptions($path){
 }
 
 function discuss($url){
-	$url = urldecode(strtok($_REQUEST["url"]),"?");
+	$urls[] = urldecode($url["url"]);
+	
+	if(not youtube video)
+	$urls[] = urldecode(strtok($url["url"]),"?");
+	
+	$urls[] = "http://www.stephenking.com/promo/utd_on_tv/letter.html";
+	//$url = urldecode(strtok($_REQUEST["url"]),"?");
 	$redditapi = "http://www.reddit.com/api/info.json?url=".$url;
 	$data = @file_get_contents($redditapi);
 	if(empty($data)){
@@ -324,6 +330,12 @@ window.addEventListener('blur', function() {
 		/*if (discuss(url,activeitem)){
 			return;
 		}*/
+		
+		if (redditlookup(url)){
+			return;
+		}
+		
+		
 		activeitem.parentNode.remove();
 		updatecounter();
 		ajax("?f=markasread&url="+url);
@@ -407,5 +419,42 @@ function addfilereader(){
 	
 	};
 }
+
+
+function redditlookup(param){
+	if(typeof param === 'object'){
+		console.log("JSONP! :)");
+		titles = new Array();
+		permalinks = new Array();
+		comments = new Array();
+		scores = new Array();
+		for ( i = 0; i < param["data"]["children"].length; i++) {
+			titles[i] = param["data"]["children"][i]["data"]["title"];
+			permalinks[i] = param["data"]["children"][i]["data"]["permalink"];
+			numcomments[i] = param["data"]["children"][i]["data"]["num_comments"];
+			scores[i] = param["data"]["children"][i]["data"]["score"];
+			
+			var span = document.createElement( 'span' );
+			span.innerHTML = "<br><span class='discuss'><a class='discusslink' href='http://reddit.com"+ permalinks[i] +"' target='_blank'>"+ titles[i] +"</a>&nbsp{"+ numcomments[i] +"}&nbsp["+ scores[i] +"]</span>";
+			activeitem.parentNode.appendChild(span); 
+		}
+		if(i == 0){
+			return false;
+		}else{
+			return true;
+		}
+	}else{
+		var redditapi  = 'http://www.reddit.com/api/info.json?url=';
+		var url = encodeURIComponent('http://www.stephenking.com/promo/utd_on_tv/letter.html');
+		var callback = '&jsonp=redditlookup';
+		var lookup = redditapi + url + callback
+		console.log(lookup);
+		var script = document.createElement('script');
+		script.src = lookup;
+		document.getElementsByTagName('head')[0].appendChild(script);
+		
+	}
+}
+
 </script>
 
