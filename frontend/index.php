@@ -167,27 +167,6 @@ function getsubscriptions($path){
 	}
 }
 
-function discuss($url){
-	$urls[] = urldecode($url["url"]);
-	
-	if(not youtube video)
-	$urls[] = urldecode(strtok($url["url"]),"?");
-	
-	$urls[] = "http://www.stephenking.com/promo/utd_on_tv/letter.html";
-	//$url = urldecode(strtok($_REQUEST["url"]),"?");
-	$redditapi = "http://www.reddit.com/api/info.json?url=".$url;
-	$data = @file_get_contents($redditapi);
-	if(empty($data)){
-			if(substr($url, -1) == "/"){
-					$url = substr_replace($url ,"",-1);
-			}elseif(substr($url, -1) != "/"){
-					$url += "/";
-			}
-			$redditapi = "http://www.reddit.com/api/info.json?url=".$url;
-			$data = @file_get_contents($redditapi);
-	}
-	echo $data;
-}
 
 // go here after login/registration or valid cookie existence
 $id = $_COOKIE["rifts"];
