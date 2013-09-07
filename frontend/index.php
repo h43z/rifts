@@ -265,9 +265,9 @@ window.onload = function() {
 								break;
                                 case "2":
 									document.getElementById("main").innerHTML = ajax("?f=getsubscriptions");
-									addremoveevents();
 									document.getElementById("main").innerHTML += "<br>Import (each feedurl line by line):<input type=file id=filereader>"; 
 									addfilereader();
+									addremoveevents();
                                 break;
                                 case "3":
 									var x=window.confirm("Are you sure?")
