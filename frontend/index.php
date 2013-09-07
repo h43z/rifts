@@ -395,7 +395,7 @@ function redditlookup(param){
 		}
 		
 		var urls = new Array;
-		param = "http://www.stephenking.com/promo/utd_on_tv/letter.html?hasn";
+		//param = "http://www.stephenking.com/promo/utd_on_tv/letter.html?hasn";
 		urls.push(param);
 		urls.push(param.substr(0,param.indexOf('?')));
 		/* here more covering */
