@@ -197,9 +197,6 @@ if(isset($_REQUEST["f"])){
 		case "gethistory":
 			getnews($historyfile);
 		break;
-		case "discuss":
-			discuss($_REQUEST["url"]);
-		break;
 		default:
 		break;
 	}
@@ -335,6 +332,7 @@ function updatecounter(){
 }
 
 function addremoveevents(){
+	console.log("in remove events");
 	    var b = document.getElementsByClassName("remove");
         for(var i = 0; i < b.length; i++) {
                 b[i].onclick = function() {
