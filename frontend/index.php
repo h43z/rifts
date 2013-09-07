@@ -291,7 +291,6 @@ window.onload = function() {
         var links = document.getElementsByClassName("close");
         for(var i = 0; i < links.length; i++) {
                 links[i].onclick = function() {
-					console.log(this.parentNode.children[0].href);
 					url=encodeURI(this.parentNode.children[0].href);
 					this.parentNode.remove();
 					updatecounter();
@@ -332,11 +331,9 @@ function updatecounter(){
 }
 
 function addremoveevents(){
-	console.log("in remove events");
 	    var b = document.getElementsByClassName("remove");
         for(var i = 0; i < b.length; i++) {
                 b[i].onclick = function() {
-						console.log(this.parentNode.children[0].href);
 						url=encodeURI(this.parentNode.children[0].href);
 						this.parentNode.remove();
 						ajax("?f=removesubscription&url="+url);
@@ -373,7 +370,7 @@ function addfilereader(){
 
 function redditlookup(param){
 	if(typeof param === 'object'){
-		console.log("JSONP! :)");
+		console.log(param);
 		titles = new Array();
 		permalinks = new Array();
 		numcomments = new Array();
