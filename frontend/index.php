@@ -302,11 +302,9 @@ window.onload = function() {
 window.addEventListener('blur', function() {
 	if(linkclick){
 		linkclick=false;
-		
 		if (redditlookup(url)){
 			return;
 		}
-
 		activeitem.parentNode.remove();
 		updatecounter();
 		ajax("?f=markasread&url="+url);
@@ -322,7 +320,6 @@ function ajax(url){
         var serverResponse = xhReq.responseText;
         return(serverResponse); 
 }
-
 
 function updatecounter(){
         counter = parseInt(document.getElementById("unseencounter").innerHTML);
@@ -367,10 +364,12 @@ function addfilereader(){
 	};
 }
 
-
+//global urls.length counter
+callbackcount = 0;
+maxcallbackcount = 2; //always set to urls.length
 function redditlookup(param){
 	if(typeof param === 'object'){
-		console.log(param);
+		callbackcount++;
 		titles = new Array();
 		permalinks = new Array();
 		numcomments = new Array();
@@ -385,10 +384,10 @@ function redditlookup(param){
 			span.innerHTML = "<br><span class='discuss'><a class='discusslink' href='http://reddit.com"+ permalinks[i] +"' target='_blank'>"+ titles[i] +"</a>&nbsp{"+ numcomments[i] +"}&nbsp["+ scores[i] +"]</span>";
 			activeitem.parentNode.appendChild(span); 
 		}
-		if(i == 0){
-			return false;
-		}else{
+		if(i != 0 || callbackcount != maxcallbackcount){
 			return true;
+		}else{
+			return false;
 		}
 	}else{
 		if(param.indexOf("http://youtube.com") !==  -1){
@@ -396,7 +395,7 @@ function redditlookup(param){
 		}
 		
 		var urls = new Array;
-		//param = "http://www.stephenking.com/promo/utd_on_tv/letter.html?hasn";
+		param = "http://www.stephenking.com/promo/utd_on_tv/letter.html?hasn";
 		urls.push(param);
 		urls.push(param.substr(0,param.indexOf('?')));
 		/* here more covering */
@@ -411,6 +410,7 @@ function redditlookup(param){
 			document.getElementsByTagName('head')[0].appendChild(script);
 			
 		}
+		return true;
 	}
 }
 
