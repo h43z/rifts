@@ -197,7 +197,6 @@ if(isset($_REQUEST["f"])){
 			markasread("*all*");
 		break;
 		case "markasread":
-		echo $_REQUEST["url"];
 			markasread($_REQUEST["url"]);
 		break;
 		case "gethistory":
@@ -340,7 +339,7 @@ function addremoveevents(){
                 b[i].onclick = function() {
 						url=encodeURI(this.parentNode.children[0].href);
 						this.parentNode.remove();
-						ajax("?f=removesubscription&url="+url);
+						ajax("?f=removesubscription&url="+encodeURIComponent(url));
 				}
 	}
 }
