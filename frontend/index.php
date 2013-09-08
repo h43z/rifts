@@ -192,7 +192,7 @@ if(isset($_REQUEST["f"])){
 			markasread("*all*");
 		break;
 		case "markasread":
-			markasread(base64_decode($_REQUEST["url"]));
+			markasread($_REQUEST["url"]);
 		break;
 		case "gethistory":
 			getnews($historyfile);
