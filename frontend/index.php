@@ -242,6 +242,7 @@ window.onload = function() {
                         //window.open(this.href);  
                         activeurl=encodeURI(this.href);
                         activeitem=this.parentNode;
+						callbackcount = 0;
                         linkclick=true;
                 }
         }
@@ -291,7 +292,7 @@ window.onload = function() {
         for(var i = 0; i < links.length; i++) {
                 links[i].onclick = function() {
 						activeitem = this.parentNode;
-						activeurl = this.parentNode.children[0].href
+						activeurl = this.parentNode.children[0].href;
 						markasread();
                 };
         }
@@ -382,7 +383,7 @@ function redditlookup(param){
 			
 			var span = document.createElement( 'span' );
 			span.innerHTML = "<br><span class='discuss'><a class='discusslink' href='http://reddit.com"+ permalinks[i] +"' target='_blank'>"+ titles[i] +"</a>&nbsp{"+ numcomments[i] +"}&nbsp["+ scores[i] +"]</span>";
-			activeitem.parentNode.appendChild(span); 
+			activeitem.appendChild(span); 
 		}
 		if(i != 0 || callbackcount != maxcallbackcount){
 			return;
