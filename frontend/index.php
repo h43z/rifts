@@ -192,6 +192,8 @@ if(isset($_REQUEST["f"])){
 			markasread("*all*");
 		break;
 		case "markasread":
+			echo "bob   |";
+			echo rawurldecode($_REQUEST["url"]);
 			markasread(rawurldecode($_REQUEST["url"]));
 		break;
 		case "gethistory":
