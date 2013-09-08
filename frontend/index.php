@@ -240,7 +240,6 @@ window.onload = function() {
                 links[i].onclick = function(e) {
                         //e.preventDefault();
                         //window.open(this.href);  
-                        console.log("clicked on link"); 
                         url=encodeURI(this.href);
                         activeitem=this;
                         linkclick=true;
@@ -291,7 +290,8 @@ window.onload = function() {
         var links = document.getElementsByClassName("close");
         for(var i = 0; i < links.length; i++) {
                 links[i].onclick = function() {
-					markasread();
+						activeitem = this.parentNode;
+						markasread();
                 };
         }
 }
