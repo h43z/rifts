@@ -240,8 +240,8 @@ window.onload = function() {
                 links[i].onclick = function(e) {
                         //e.preventDefault();
                         //window.open(this.href);  
-                        url=encodeURI(this.href);
-                        activeitem=this;
+                        activeurl=encodeURI(this.href);
+                        activeitem=this.parentNode;
                         linkclick=true;
                 }
         }
@@ -290,7 +290,8 @@ window.onload = function() {
         var links = document.getElementsByClassName("close");
         for(var i = 0; i < links.length; i++) {
                 links[i].onclick = function() {
-						activeitem = this;
+						activeitem = this.parentNode;
+						activeurl = this.parentNode.children[0].href
 						markasread();
                 };
         }
@@ -299,16 +300,16 @@ window.onload = function() {
 window.addEventListener('blur', function() {
 	if(linkclick){
 		linkclick=false;
-		redditlookup(url);
+		redditlookup(activeurl);
 	}
 
 });
 
 function markasread(){
-	activeitem.parentNode.remove();
+	activeitem.remove();
 	updatecounter();
 	callbackcount = 0;
-	ajax("?f=markasread&url="+encodeURI(activeitem.href));
+	ajax("?f=markasread&url="+encodeURI(activeurl));
 }
 
 function ajax(url){
