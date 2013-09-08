@@ -291,10 +291,7 @@ window.onload = function() {
         var links = document.getElementsByClassName("close");
         for(var i = 0; i < links.length; i++) {
                 links[i].onclick = function() {
-					url=encodeURI(this.parentNode.children[0].href);
-					this.parentNode.remove();
-					updatecounter();
-					ajax("?f=markasread&url="+url);
+					markasread();
                 };
         }
 }
@@ -387,13 +384,14 @@ function redditlookup(param){
 			activeitem.parentNode.appendChild(span); 
 		}
 		if(i != 0 || callbackcount != maxcallbackcount){
-			return true;
+			return;
 		}else{
 			markasread();
 		}
 	}else{
 		if(param.indexOf("http://youtube.com") !==  -1){
 			markasread();
+			return;
 		}
 		
 		var urls = new Array;
