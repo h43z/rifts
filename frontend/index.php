@@ -290,7 +290,7 @@ window.onload = function() {
         var links = document.getElementsByClassName("close");
         for(var i = 0; i < links.length; i++) {
                 links[i].onclick = function() {
-						activeitem = this.parentNode;
+						activeitem = this;
 						markasread();
                 };
         }
