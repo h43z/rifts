@@ -192,9 +192,7 @@ if(isset($_REQUEST["f"])){
 			markasread("*all*");
 		break;
 		case "markasread":
-			echo "bob   |";
-			echo rawurldecode($_REQUEST["url"]);
-			markasread(rawurldecode($_REQUEST["url"]));
+			markasread(base64_decode($_REQUEST["url"]));
 		break;
 		case "gethistory":
 			getnews($historyfile);
@@ -312,7 +310,7 @@ function markasread(){
 	activeitem.remove();
 	updatecounter();
 	callbackcount = 0;
-	ajax("?f=markasread&url="+ encodeURIComponent(activeurl));
+	ajax("?f=markasread&url="+ btoa(activeurl));
 }
 
 function ajax(url){
