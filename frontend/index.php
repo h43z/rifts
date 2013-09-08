@@ -24,7 +24,7 @@ if(isset($_COOKIE["rifts"])){
 		file_put_contents($userdata.$newsfile, "");
 		file_put_contents($userdata.$historyfile, "");
 		chmod($userdata.$username."_".$password."_news",0777); // must be write/readable for rifts.sh
-		file_put_contents($riftsconfig,$subscriptionsfile."###".$newsfile."###".$historyfile , FILE_APPEND); // rifts.config permissions!
+		file_put_contents($riftsconfig,$subscriptionsfile."###".$newsfile."###".$historyfile."\n" , FILE_APPEND); // rifts.config permissions!
 
 		validation(null,$username,$password);
 	}else{
