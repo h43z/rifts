@@ -302,15 +302,17 @@ window.onload = function() {
 window.addEventListener('blur', function() {
 	if(linkclick){
 		linkclick=false;
-		if (redditlookup(url)){
-			return;
-		}
-		activeitem.parentNode.remove();
-		updatecounter();
-		ajax("?f=markasread&url="+url);
+		redditlookup(url);
 	}
 
 });
+
+function markasread(){
+	activeitem.parentNode.remove();
+	updatecounter();
+	callbackcount = 0;
+	ajax("?f=markasread&url="+encodeURI(activeitem.href));
+}
 
 function ajax(url){
         var xhReq = new XMLHttpRequest();
@@ -387,11 +389,11 @@ function redditlookup(param){
 		if(i != 0 || callbackcount != maxcallbackcount){
 			return true;
 		}else{
-			return false;
+			markasread();
 		}
 	}else{
 		if(param.indexOf("http://youtube.com") !==  -1){
-			return false;
+			markasread();
 		}
 		
 		var urls = new Array;
@@ -410,7 +412,6 @@ function redditlookup(param){
 			document.getElementsByTagName('head')[0].appendChild(script);
 			
 		}
-		return true;
 	}
 }
 
