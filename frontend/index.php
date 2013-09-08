@@ -17,12 +17,12 @@ if(isset($_COOKIE["rifts"])){
 	//tries to register?
 	if($code == $registercode){
 		$username=substr($_REQUEST["username"],4,100);
-		$subscriptionsfile = $userdata.$username."_".$password."_subscriptions";
-		$newsfile = $userdata.$username."_".$password."_news";
-		$historyfile = $userdata.$username."_".$password."_history";
-		file_put_contents($subscriptionsfile, "");
-		file_put_contents($newsfile, "");
-		file_put_contents($historyfile, "");
+		$subscriptionsfile = $username."_".$password."_subscriptions";
+		$newsfile = $username."_".$password."_news";
+		$historyfile = $username."_".$password."_history";
+		file_put_contents($userdata.$subscriptionsfile, "");
+		file_put_contents($userdata.$newsfile, "");
+		file_put_contents($userdata.$historyfile, "");
 		chmod($userdata.$username."_".$password."_news",0777); // must be write/readable for rifts.sh
 		file_put_contents($riftsconfig,$subscriptionsfile."###".$newsfile."###".$historyfile , FILE_APPEND); // rifts.config permissions!
 
