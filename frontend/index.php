@@ -193,8 +193,7 @@ if(isset($_REQUEST["f"])){
 		break;
 		case "markasread":
 		echo $_REQUEST["url"];
-		echo rawurldecode($_REQUEST["url"]);
-			markasread(rawurldecode($_REQUEST["url"]));
+			markasread($_REQUEST["url"]);
 		break;
 		case "gethistory":
 			getnews($historyfile);
