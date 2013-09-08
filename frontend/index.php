@@ -310,7 +310,7 @@ function markasread(){
 	activeitem.remove();
 	updatecounter();
 	callbackcount = 0;
-	ajax("?f=markasread&url="+ btoa(activeurl));
+	ajax("?f=markasread&url="+ encodeURIComponent(activeurl));
 }
 
 function ajax(url){
