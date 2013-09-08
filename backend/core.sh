@@ -21,17 +21,17 @@ parse(){
 		-N atom="http://www.w3.org/2005/Atom" \
 		-t \
 		-m "//rdf:RDF/rss:item" \
-		-v "rss:title" \
+		-v 'normalize-space(rss:title)' \
 		-o "###" \
 		-v "rss:link" -n \
 		-t \
 		-m "//rss/channel/item" \
-		-v "title" \
+		-v 'normalize-space(title)' \
 		-o "###" \
 		-v "link" -n \
 		-t \
 		-m "//atom:feed/atom:entry" \
-		-v "atom:title" \
+		-v 'normalize-space(atom:title)' \
 		-o "###" \
 		--if "string-length(atom:link[@rel = 'alternate' ]/@href) > 3" -v "atom:link[@rel = 'alternate' ]/@href" \
 		--else -v "atom:link/@href" -b -n |
