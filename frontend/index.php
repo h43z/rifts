@@ -3,6 +3,7 @@
 $registercode="2445";
 $registercodelength=strlen($registercode);
 $userdata="./userdata/";
+$riftsconfig = "../backend/rifts.config";
 
 if(isset($_COOKIE["rifts"])){
 	
@@ -13,14 +14,18 @@ if(isset($_COOKIE["rifts"])){
 	$code=substr($_REQUEST["username"],0,$registercodelength);
 	$password=md5($_REQUEST["password"]);
 	
-	//tries to register
+	//tries to register?
 	if($code == $registercode){
 		$username=substr($_REQUEST["username"],4,100);
-		file_put_contents($userdata.$username."_".$password."_subscriptions", "");
-		file_put_contents($userdata.$username."_".$password."_news", "");
-		file_put_contents($userdata.$username."_".$password."_history", "");
+		$subscriptionsfile = $userdata.$username."_".$password."_subscriptions";
+		$newsfile = $userdata.$username."_".$password."_news";
+		$historyfile = $userdata.$username."_".$password."_history";
+		file_put_contents($subscriptionsfile, "");
+		file_put_contents($newsfile, "");
+		file_put_contents($historyfile, "");
 		chmod($userdata.$username."_".$password."_news",0777); // must be write/readable for rifts.sh
-		
+		file_put_contents($riftsconfig,$subscriptionsfile."###".$newsfile."###".$historyfile , FILE_APPEND); // rifts.config permissions!
+
 		validation(null,$username,$password);
 	}else{
 	//tries to login
@@ -401,7 +406,7 @@ function redditlookup(param){
 		//param = "http://www.stephenking.com/promo/utd_on_tv/letter.html?hasn";
 		urls.push(param);
 		urls.push(param.substr(0,param.indexOf('?')));
-		/* here more covering */
+		/* here more covering, don't forget maxcallbackcount */
 		
 		var redditapi  = 'http://www.reddit.com/api/info.json?url=';
 		var callback = '&jsonp=redditlookup';
@@ -411,7 +416,6 @@ function redditlookup(param){
 			var script = document.createElement('script');
 			script.src = lookup;
 			document.getElementsByTagName('head')[0].appendChild(script);
-			
 		}
 	}
 }
