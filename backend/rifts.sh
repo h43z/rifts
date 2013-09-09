@@ -58,7 +58,7 @@ do
 						awk -v newsfile=$newsfile -v historyfile=$historyfile -F'###' '{print $1" "newsfile" "historyfile}' $feedfile | xargs -P 20 -n 3 $_CORE
 					fi
 				done < $_CONFIG
-				rm $_CACHE
+				#rm $_CACHE
 			else
 				echo "rifts.config is empty or does not exist"
 			fi
