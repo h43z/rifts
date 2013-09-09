@@ -46,6 +46,7 @@ parse(){
 					line="$title###$location"
 				fi
 					echo "$_PARAMETERURL###$line" >> $_CACHE
+					debug echo "maybe new: $line"
 					addnews "$line"
 			done 
 	else
