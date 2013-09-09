@@ -37,14 +37,14 @@ parse(){
 		--else -v "atom:link/@href" -b -n |
 			while read line
 			do
-				location=$(echo $line | awk -F'###' '{print $2}' | tr '[A-Z]' '[a-z]')
+				location=$(echo $line | awk -F'###' '{print $2}')
 				title=$(echo $line | awk -F'###' '{print $1}')
 				if [[ "$location" == *feedproxy.google.com* ]];then
 					location=$(wget -t 1 -T 7 -U notgoogle --no-check-certificate -S --spider $location 2>&1 | grep "Location:" | tr "\n" "|")
-					location=$(echo $location | grep -Po '(?<=Location: ).*?(?=\|)' | awk '{print $1}' | tail -n1 | tr '[A-Z]' '[a-z]')
-					title=$(echo $line | awk -F'###' '{print $1}')
-					line="$title###$location"
+					location=$(echo $location | grep -Po '(?<=Location: ).*?(?=\|)' | awk '{print $1}' | tail -n1 )		
 				fi
+					location = $(echo $location | tr '[A-Z]' '[a-z]')
+					line="$title###$location"
 					echo "$_PARAMETERURL###$line" >> $_CACHE
 					debug echo "maybe new: $line"
 					addnews "$line"
