@@ -232,6 +232,8 @@ if(isset($_REQUEST["f"])){
 		<a class=set opt=3>all read</a><br>
 		<a class=set opt=4>history</a><br>
 		<a class=set opt=5>logout</a>
+		/*fork me*/
+		<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
 	</div>
 	<div id=main><?getnews();?></div>
 </html>
