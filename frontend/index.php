@@ -232,7 +232,6 @@ if(isset($_REQUEST["f"])){
 		<a class=set opt=3>all read</a><br>
 		<a class=set opt=4>history</a><br>
 		<a class=set opt=5>logout</a>
-		/*fork me*/
 	</div>
 	<div id=main><?getnews();?></div>
 			<!-- fork me -->
