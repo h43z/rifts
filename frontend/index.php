@@ -225,8 +225,6 @@ if(isset($_REQUEST["f"])){
 
 <html><meta charset='utf-8'/>
 	<title>RIFTS</title>
-		<!-- fork me -->
-		<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
 	<div id='options'>
 		<b><a href=''><?echo "$username@"?>RIFTS ~ (<span id='unseencounter'><? echo $newscount?></span>)</a></b><br>
 		<a class=set opt=1>add</a><br>
@@ -237,6 +235,9 @@ if(isset($_REQUEST["f"])){
 		/*fork me*/
 	</div>
 	<div id=main><?getnews();?></div>
+			<!-- fork me -->
+		<a href="https://github.com/h43zet/rifts/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+
 </html>
 
 <script>
