@@ -248,7 +248,7 @@ window.onload = function() {
                 links[i].onclick = function(e) {
                         //e.preventDefault();
                         //window.open(this.href);  
-                        activeurl=encodeURI(this.href);
+                        activeurl=this.href;
                         activeitem=this.parentNode;
 						callbackcount = 0;
                         linkclick=true;
