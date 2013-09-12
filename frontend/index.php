@@ -399,7 +399,7 @@ function redditlookup(param){
 			markasread();
 		}
 	}else{
-		if(param.indexOf("http://youtube.com") !==  -1){
+		if(param.indexOf(".youtube.com") !==  -1){
 			markasread();
 			return;
 		}
