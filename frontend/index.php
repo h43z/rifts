@@ -265,7 +265,7 @@ window.onload = function() {
                                 case "1":
 									var url = window.prompt("RSS URL:","");
 									if (url != null && url != ""){
-										ajax("?f=add&url="+encodeURI(url));
+										ajax("?f=add&url="+encodeURIComponent(url));
 									}
 								break;
                                 case "2":
