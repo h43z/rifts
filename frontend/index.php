@@ -136,7 +136,7 @@ function markasread($url){ // $url == "*all*" == all marked as read
 		file_put_contents($newsfile, "");
 	}else{
 		$removed = removeline($newsfile,$url);
-		prepend($historyfile,"\n".$removed);
+		prepend($historyfile,$removed);
 	}
 }
 
