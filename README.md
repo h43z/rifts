@@ -1,4 +1,4 @@
 rifts
 =====
 Read It From The Source<br>
-rss backend fetcher. 
+rss backend fetcher written in bash. 
